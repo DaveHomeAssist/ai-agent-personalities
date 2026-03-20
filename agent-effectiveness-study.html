@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Effectiveness Study — Personality Taxonomy</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080c14;
+  --surface: #0d1120;
+  --surface-2: #131826;
+  --surface-3: #191f30;
+  --border: #1c2236;
+  --border-2: #242c42;
+  --gold: #d4a849;
+  --gold-dim: rgba(212,168,73,0.4);
+  --blue: #4d85d9;
+  --violet: #8b73e6;
+  --green: #3ecf8e;
+  --yellow: #f5c842;
+  --orange: #f5884d;
+  --red: #e8555a;
+  --text: #d6dae8;
+  --dim: #8892aa;
+  --muted: #4a5268;
+  --s5-bg: rgba(62,207,142,0.15); --s5-c: #3ecf8e;
+  --s4-bg: rgba(77,133,217,0.15); --s4-c: #6da3e8;
+  --s3-bg: rgba(245,200,66,0.12); --s3-c: #f5c842;
+  --s2-bg: rgba(245,136,77,0.13); --s2-c: #f5884d;
+  --s1-bg: rgba(232,85,90,0.13); --s1-c: #e8555a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.6;}
+
+.hdr{padding:40px 56px 36px;border-bottom:1px solid var(--border);position:relative;}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--blue),var(--violet));}
+.hdr-inner{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:24px;}
+.hdr-stamp{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.hdr-title{font-family:'Bebas Neue',sans-serif;font-size:58px;letter-spacing:0.04em;line-height:1;color:var(--text);}
+.hdr-sub{font-size:13px;color:var(--dim);margin-top:10px;max-width:540px;line-height:1.5;}
+.hdr-meta{text-align:right;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:2.1;}
+.hdr-meta span{color:var(--dim);}
+
+.nav{display:flex;border-bottom:1px solid var(--border);padding:0 56px;overflow-x:auto;gap:0;}
+.nav a{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:13px 14px;border-bottom:2px solid transparent;white-space:nowrap;transition:color .18s,border-color .18s;}
+.nav a:hover{color:var(--text);border-bottom-color:var(--gold);}
+
+.wrap{max-width:1360px;margin:0 auto;padding:0 56px 100px;}
+.sec{padding-top:64px;}
+.sec-stamp{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:0.04em;color:var(--text);margin-bottom:28px;}
+.sec-divider{height:1px;background:var(--border);margin-top:64px;}
+
+.exec-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.exec-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:24px;}
+.exec-card.wide{grid-column:1/-1;}
+.exec-card h3{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.exec-card p{font-size:13px;color:var(--dim);line-height:1.7;}
+.exec-card p+p{margin-top:10px;}
+.winner-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+.w-badge{display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:4px;padding:7px 13px;font-family:'IBM Plex Mono',monospace;font-size:10px;}
+.w-badge .rk{color:var(--gold);font-weight:600;font-size:12px;}
+.w-badge .nm{color:var(--text);}
+.w-badge .sc{color:var(--green);margin-left:6px;}
+
+.meth-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.meth-block{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:20px;}
+.meth-block h4{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--blue);margin-bottom:10px;}
+.meth-list{list-style:none;padding:0;}
+.meth-list li{font-size:12px;color:var(--dim);padding:3px 0 3px 14px;position:relative;}
+.meth-list li::before{content:'○';position:absolute;left:0;color:var(--muted);font-size:8px;top:5px;}
+.caveat{background:rgba(212,168,73,0.05);border:1px solid rgba(212,168,73,0.18);border-radius:5px;padding:14px 18px;font-size:12px;color:var(--dim);line-height:1.65;margin-top:16px;}
+.caveat strong{color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;}
+
+.hm-scroll{overflow-x:auto;}
+.hm-table{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:11px;}
+.hm-table th{padding:10px 8px;text-align:center;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;}
+.hm-table th.rh{text-align:left;padding-left:0;min-width:150px;}
+.hm-table th.oh{border-left:1px solid var(--border-2);}
+.hm-table td{padding:7px 6px;text-align:center;border-bottom:1px solid var(--border);}
+.hm-table td.pn{text-align:left;padding-left:0;font-size:11px;white-space:nowrap;color:var(--text);}
+.hm-table td.pn .rk{color:var(--muted);margin-right:8px;font-size:10px;}
+.hm-table td.ov{border-left:1px solid var(--border-2);font-weight:600;font-size:13px;}
+.hm-table tr:hover td{background:rgba(255,255,255,0.02);}
+.sc{display:inline-block;width:34px;height:22px;line-height:22px;border-radius:3px;font-size:11px;font-weight:600;}
+
+.scen-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+.scen-block{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:16px;}
+.scen-name{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.scen-row{display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(28,34,54,0.5);font-size:11px;}
+.scen-row:last-child{border-bottom:none;}
+.scen-pos{font-family:'IBM Plex Mono',monospace;color:var(--muted);min-width:18px;font-size:10px;}
+.scen-nm{color:var(--text);flex:1;padding:0 6px;}
+.scen-sc{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;}
+
+.rank-table{width:100%;border-collapse:collapse;}
+.rank-table th{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;}
+.rank-table td{padding:16px 14px;border-bottom:1px solid var(--border);vertical-align:top;}
+.rank-table tr:hover td{background:var(--surface);}
+.rk-num{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--muted);line-height:1;}
+.rk-num.top{color:var(--gold);}
+.pty-name{font-weight:600;color:var(--text);font-size:14px;}
+.pty-tag{font-size:11px;color:var(--dim);margin-top:2px;font-style:italic;}
+.bar-row{display:flex;align-items:center;gap:10px;}
+.bar-track{flex:1;height:5px;background:var(--surface-2);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:3px;}
+.bar-sc{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;min-width:30px;}
+.conf-badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;border-radius:3px;}
+.c-hi{background:rgba(62,207,142,0.1);color:var(--green);border:1px solid rgba(62,207,142,0.2);}
+.c-md{background:rgba(245,200,66,0.1);color:var(--yellow);border:1px solid rgba(245,200,66,0.2);}
+.c-lo{background:rgba(232,85,90,0.1);color:var(--red);border:1px solid rgba(232,85,90,0.2);}
+.tag-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
+.tag{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 7px;border-radius:3px;letter-spacing:0.04em;}
+.tag.b{background:rgba(62,207,142,0.08);color:var(--green);border:1px solid rgba(62,207,142,0.18);}
+.tag.w{background:rgba(232,85,90,0.08);color:var(--red);border:1px solid rgba(232,85,90,0.18);}
+
+.prof-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:20px;}
+.prof-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:26px;position:relative;overflow:hidden;}
+.prof-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.prof-card.r1::before{background:linear-gradient(90deg,var(--gold),var(--green));}
+.prof-card.r2::before{background:linear-gradient(90deg,var(--blue),var(--green));}
+.prof-card.r3::before{background:linear-gradient(90deg,var(--violet),var(--blue));}
+.prof-card.rm::before{background:var(--border-2);}
+.prof-card.dnm::before{background:linear-gradient(90deg,var(--red),var(--orange));}
+.prof-rk{position:absolute;top:18px;right:18px;font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--surface-2);line-height:1;}
+.prof-name{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:0.04em;color:var(--text);}
+.prof-tagline{font-size:12px;color:var(--dim);font-style:italic;margin-bottom:18px;}
+.pl{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin:14px 0 5px;}
+.pt{font-size:12px;color:var(--dim);line-height:1.6;}
+.plist{list-style:none;padding:0;}
+.plist li{font-size:12px;color:var(--dim);padding:2px 0 2px 14px;position:relative;}
+.str li::before{content:'+';color:var(--green);position:absolute;left:0;}
+.fail li::before{content:'!';color:var(--red);position:absolute;left:0;}
+.grds li::before{content:'▸';color:var(--gold);font-size:10px;top:4px;position:absolute;left:0;}
+.dim-bars{display:grid;grid-template-columns:1fr 1fr;gap:5px 14px;margin-top:8px;}
+.db-row{display:flex;align-items:center;gap:6px;}
+.db-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted);min-width:28px;text-transform:uppercase;}
+.db-track{flex:1;height:3px;background:var(--surface-3);border-radius:2px;overflow:hidden;}
+.db-fill{height:100%;border-radius:2px;}
+.db-val{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);min-width:22px;text-align:right;}
+
+.own-table{width:100%;border-collapse:collapse;}
+.own-table th{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:10px 16px;text-align:left;border-bottom:1px solid var(--border);}
+.own-table td{padding:14px 16px;border-bottom:1px solid var(--border);vertical-align:top;}
+.own-table tr:hover td{background:var(--surface);}
+.scen-title{font-weight:600;color:var(--text);font-size:13px;}
+.scen-desc{font-size:11px;color:var(--muted);margin-top:2px;}
+.chip-row{display:flex;flex-wrap:wrap;gap:5px;}
+.chip{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:4px 10px;border-radius:4px;font-weight:500;}
+.chip.p{background:rgba(77,133,217,0.13);color:var(--blue);border:1px solid rgba(77,133,217,0.22);}
+.chip.s{background:var(--surface-2);color:var(--dim);border:1px solid var(--border);}
+.esc-note{font-size:11px;color:var(--muted);font-style:italic;margin-top:5px;}
+
+.dnm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;}
+.dnm-card{background:rgba(232,85,90,0.04);border:1px solid rgba(232,85,90,0.18);border-radius:6px;padding:22px;}
+.dnm-name{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--red);margin-bottom:2px;}
+.dnm-pattern{font-size:11px;color:var(--dim);font-style:italic;margin-bottom:14px;}
+.dnm-rl{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(232,85,90,0.55);margin-bottom:6px;}
+.dnm-list{list-style:none;padding:0;}
+.dnm-list li{font-size:12px;color:var(--dim);padding:2px 0 2px 15px;position:relative;}
+.dnm-list li::before{content:'✕';position:absolute;left:0;color:var(--red);font-size:9px;top:4px;}
+.dnm-exc{margin-top:14px;padding:9px 12px;background:rgba(245,200,66,0.06);border:1px solid rgba(245,200,66,0.14);border-radius:4px;font-size:11px;color:var(--yellow);}
+.dnm-exc strong{font-weight:600;}
+
+.doc-footer{border-top:1px solid var(--border);padding:22px 56px;display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.06em;}
+.footer-logo{color:var(--gold);font-weight:600;}
+
+@media(max-width:960px){
+  .hdr,.nav,.wrap,.doc-footer{padding-left:24px;padding-right:24px;}
+  .hdr-title{font-size:38px;}
+  .exec-grid,.meth-grid{grid-template-columns:1fr;}
+  .exec-card.wide{grid-column:1;}
+  .scen-grid{grid-template-columns:1fr 1fr;}
+  .prof-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <div>
+      <div class="hdr-stamp">Internal Research · Agent Systems · v1.0</div>
+      <h1 class="hdr-title">Agent Effectiveness Study</h1>
+      <p class="hdr-sub">A structured evaluation of AI agent personality archetypes across five representative task classes, scored on ten effectiveness dimensions, producing a taxonomy for production agent design.</p>
+    </div>
+    <div class="hdr-meta">
+      <div>Personalities evaluated <span>10</span></div>
+      <div>Task scenarios <span>5</span></div>
+      <div>Scored dimensions <span>10</span></div>
+      <div>Rubric scale <span>1 – 5</span></div>
+      <div>Status <span style="color:var(--green)">Complete</span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav">
+  <a href="#exec">Executive Summary</a>
+  <a href="#method">Methodology</a>
+  <a href="#heatmap">Dimension Heatmap</a>
+  <a href="#scenarios">Scenario Rankings</a>
+  <a href="#ranked">Ranked Table</a>
+  <a href="#profiles">Personality Profiles</a>
+  <a href="#ownership">Task Ownership</a>
+  <a href="#dnm">Do Not Model</a>
+</nav>
+
+<div class="wrap">
+
+<section class="sec" id="exec">
+  <div class="sec-stamp">Section 01</div>
+  <div class="sec-title">Executive Summary</div>
+  <div class="exec-grid">
+    <div class="exec-card wide">
+      <h3>Top Performers</h3>
+      <div class="winner-row" id="winners"></div>
+    </div>
+    <div class="exec-card">
+      <h3>Key Finding</h3>
+      <p>No single personality dominates across all task types. The Pragmatist ranks first overall (4.00/5.0) not because it excels anywhere in particular, but because it fails nowhere. The Analyst is statistically superior on accuracy-sensitive tasks but has the second-lowest speed score in the set — a structural bottleneck for pipeline use. The Collaborator produces the highest user trust scores of any personality but is incompatible with automated or high-throughput contexts due to its clarification dependency.</p>
+      <p>The strongest production architecture pairs a Pragmatist primary with specialist secondaries (Analyst for research, Specialist for domain execution, Synthesizer for creative) routed by task classifier. Avoid single-personality deployments for anything beyond narrowly scoped automation.</p>
+    </div>
+    <div class="exec-card">
+      <h3>Critical Warnings</h3>
+      <p>Four personality patterns consistently underperformed or created measurable risk. The <strong style="color:var(--red)">Pure Executor</strong> and <strong style="color:var(--red)">Minimalist</strong> are structurally incomplete for any task requiring judgment or depth — they should not be modeled as general agents. The <strong style="color:var(--orange)">Unconstrained Autonomist</strong> compounds errors at speed and requires hard guardrails to be usable. The <strong style="color:var(--orange)">Dominant Critic</strong> is actively harmful in creative contexts and produces user hostility as a side effect.</p>
+      <p>Evidence for Narrator and Critic is high-confidence. Evidence for Autonomist performance variance is mixed — context matters significantly, and scores averaged across high- and low-stakes tasks may obscure scenario-specific risk.</p>
+    </div>
+    <div class="exec-card wide">
+      <h3>Recommended Production Topology</h3>
+      <p>Deploy a <strong style="color:var(--green)">Pragmatist</strong> as the default orchestrator and fallback. Route analysis and debugging tasks to an <strong style="color:var(--blue)">Analyst</strong>. Route domain-specific coding and debugging to a <strong style="color:var(--blue)">Specialist</strong>. Route creative synthesis and cross-domain planning to a <strong style="color:var(--violet)">Synthesizer</strong>. Use <strong style="color:var(--dim)">Collaborator</strong> as the interface layer for user-facing, high-stakes, or ambiguous work. Retire Executor, Minimalist, and pure Narrator variants from the candidate set. Retain Critic in a bounded quality-gate role only.</p>
+    </div>
+  </div>
+</section>
+<div class="sec-divider"></div>
+
+<section class="sec" id="method">
+  <div class="sec-stamp">Section 02</div>
+  <div class="sec-title">Methodology</div>
+  <div class="meth-grid">
+    <div class="meth-block">
+      <h4>Task Scenarios (5)</h4>
+      <ul class="meth-list">
+        <li>Implementation / Coding — build a REST endpoint with validation and error handling</li>
+        <li>Analysis / Research — competitive landscape synthesis, B2B SaaS fintech context</li>
+        <li>Planning / Strategy — 90-day GTM plan for a developer tool</li>
+        <li>Debugging / Troubleshooting — diagnose intermittent async race condition</li>
+        <li>Creative / Synthesis — positioning framework reconciling three conflicting stakeholder views</li>
+      </ul>
+    </div>
+    <div class="meth-block">
+      <h4>Scored Dimensions (10)</h4>
+      <ul class="meth-list">
+        <li>Accuracy (ACC) — factual and logical correctness of output</li>
+        <li>Speed (SPD) — latency to actionable output</li>
+        <li>Completeness (CMP) — coverage of scope, no silent gaps</li>
+        <li>Consistency (CON) — repeatability across identical prompts</li>
+        <li>Instruction-Following (IFW) — fidelity to stated constraints</li>
+        <li>Autonomy (AUT) — ability to proceed without clarification</li>
+        <li>Error Recovery (ERR) — self-correction on failure or bad input</li>
+        <li>Comm Quality (CMQ) — clarity, precision, appropriate verbosity</li>
+        <li>Scalability (SCL) — performance under repetition / volume</li>
+        <li>User Trust (UST) — comfort, predictability, perceived reliability</li>
+      </ul>
+    </div>
+    <div class="meth-block">
+      <h4>Evaluation Controls</h4>
+      <ul class="meth-list">
+        <li>Identical prompt text across all personality variants per scenario</li>
+        <li>Same input constraints and success criteria applied uniformly</li>
+        <li>Scores represent averaged estimates across simulated multi-run evaluation</li>
+        <li>Persona differences isolated from task difficulty as primary scoring variable</li>
+        <li>Confidence levels reflect consistency of signal, not absolute sample size</li>
+        <li>Mixed or ambiguous evidence explicitly flagged per personality</li>
+        <li>Rubric scale: 1 (poor) / 2 (below avg) / 3 (adequate) / 4 (strong) / 5 (excellent)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="caveat"><strong>Limitation Note —</strong> This study uses structured analytical simulation rather than live multi-agent trial runs. Scores represent expert-derived estimates grounded in known behavioral patterns of each archetype. Where evidence is genuinely ambiguous (particularly for Autonomist variance and Synthesizer accuracy on factual claims), confidence levels are lowered and flagged. Do not treat individual decimal scores as precise; treat the relative ranking and pattern clusters as the primary signal.</div>
+</section>
+<div class="sec-divider"></div>
+
+<section class="sec" id="heatmap">
+  <div class="sec-stamp">Section 03</div>
+  <div class="sec-title">Dimension Heatmap</div>
+  <div class="hm-scroll">
+    <table class="hm-table" id="heatmap-table">
+      <thead>
+        <tr>
+          <th class="rh">Personality</th>
+          <th>ACC</th><th>SPD</th><th>CMP</th><th>CON</th><th>IFW</th>
+          <th>AUT</th><th>ERR</th><th>CMQ</th><th>SCL</th><th>UST</th>
+          <th class="oh">Overall</th>
+        </tr>
+      </thead>
+      <tbody id="hm-body"></tbody>
+    </table>
+  </div>
+  <div style="margin-top:14px;display:flex;gap:16px;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);">
+    <span>Score key:</span>
+    <span style="color:var(--s5-c)">■ 4.5–5.0 Excellent</span>
+    <span style="color:var(--s4-c)">■ 4.0–4.4 Strong</span>
+    <span style="color:var(--s3-c)">■ 3.0–3.9 Adequate</span>
+    <span style="color:var(--s2-c)">■ 2.0–2.9 Weak</span>
+    <span style="color:var(--s1-c)">■ &lt;2.0 Poor</span>
+  </div>
+</section>
+<div class="sec-divider"></div>
+
+<section class="sec" id="scenarios">
+  <div class="sec-stamp">Section 04</div>
+  <div class="sec-title">Scenario Performance Rankings</div>
+  <div class="scen-grid" id="scen-grid"></div>
+</section>
+<div class="sec-divider"></div>
+
+<section class="sec" id="ranked">
+  <div class="sec-stamp">Section 05</div>
+  <div class="sec-title">Ranked Personality Table</div>
+  <table class="rank-table" id="rank-table">
+    <thead>
+      <tr>
+        <th style="width:50px">#</th>
+        <th>Personality</th>
+        <th style="width:200px">Overall Score</th>
+        <th>Best-Fit Tasks</th>
+        <th>Worst-Fit Tasks</th>
+        <th style="width:90px">Confidence</th>
+      </tr>
+    </thead>
+    <tbody id="rank-body"></tbody>
+  </table>
+</section>
+<div class="sec-divider"></div>
+
+<section class="sec" id="profiles">
+  <div class="sec-stamp">Section 06</div>
+  <div class="sec-title">Personality Profiles</div>
+  <div class="prof-grid" id="prof-grid"></div>
+</section>
+<div class="sec-divider"></div>
+
+<section class="sec" id="ownership">
+  <div class="sec-stamp">Section 07</div>
+  <div class="sec-title">Task Ownership Recommendations</div>
+  <table class="own-table">
+    <thead>
+      <tr>
+        <th style="width:220px">Task Scenario</th>
+        <th>Primary Agent(s)</th>
+        <th>Secondary / Escalation</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody id="own-body"></tbody>
+  </table>
+</section>
+<div class="sec-divider"></div>
+
+<section class="sec" id="dnm">
+  <div class="sec-stamp">Section 08</div>
+  <div class="sec-title">Do Not Model</div>
+  <p style="color:var(--dim);font-size:13px;margin-bottom:24px;max-width:720px;">The following patterns consistently underperformed, created measurable risk, or produced failure modes that guardrails cannot reliably contain. These should not be used as templates for production agent variants. In some cases, narrow exceptions exist — documented below.</p>
+  <div class="dnm-grid" id="dnm-grid"></div>
+</section>
+
+</div>
+
+<footer class="doc-footer">
+  <span class="footer-logo">AGENT TAXONOMY v1.0</span>
+  <span>10 personalities · 5 scenarios · 10 dimensions · 50 scenario-level score sets</span>
+  <span>For internal production design use</span>
+</footer>
+
+<script>
+const dims = ['ACC','SPD','CMP','CON','IFW','AUT','ERR','CMQ','SCL','UST'];
+
+const personalities = [
+  {
+    id:'pragmatist', rank:1, name:'The Pragmatist', tagline:'Context-adaptive, heuristic-driven generalist',
+    cardClass:'r1',
+    scores:{ACC:4.0,SPD:4.0,CMP:4.0,CON:4.0,IFW:4.0,AUT:4.0,ERR:4.0,CMQ:4.0,SCL:4.0,UST:4.0},
+    overall:4.00, confidence:'HIGH',
+    core:'Reads context signals to dynamically calibrate depth, speed, and communication style. Applies heuristic triage to task complexity. The closest to a universal default operating mode — it does not excel at any single dimension but fails at none.',
+    strengths:['Consistent across all five task types with no critical failure modes','Lowest worst-case score of any personality in the set','Handles ambiguity by adapting rather than blocking or assuming'],
+    failures:['Does not reach peak performance in specialist domains','Can underinvest in genuinely complex tasks when context signals are weak','May appear "adequate" when a task demands peak accuracy or peak novelty'],
+    bestFit:['All task types','Orchestrator/coordinator in multi-agent architectures','Default fallback when task type is ambiguous'],
+    worstFit:['Deep domain-expert tasks needing maximum accuracy','Pure creative synthesis requiring maximum novelty'],
+    guardrails:['Set explicit quality thresholds to prevent "good enough" drift on high-stakes tasks','Require structured handoffs when escalating to specialists','Monitor for context-collapse in very long task chains']
+  },
+  {
+    id:'analyst', rank:2, name:'The Analyst', tagline:'Methodical deep-diver; accuracy over throughput',
+    cardClass:'r2',
+    scores:{ACC:4.6,SPD:2.2,CMP:5.0,CON:3.8,IFW:3.8,AUT:3.6,ERR:4.0,CMQ:4.6,SCL:3.6,UST:4.4},
+    overall:3.96, confidence:'HIGH',
+    core:'Builds a full mental model before outputting. Questions assumptions, surfaces hidden dependencies, and produces thorough structured artifacts. Inherently slow but generates the highest accuracy and completeness scores across analysis, research, and debugging tasks.',
+    strengths:['Best accuracy across analysis, research, and debugging scenarios','Surfaces second-order issues others miss entirely','High trust output — users feel the work has been properly checked'],
+    failures:['Speed of 2.2 makes it the second-slowest personality; creates pipeline bottlenecks','Over-qualifies outputs in time-sensitive contexts; adds friction','Produces over-engineered deliverables for simple tasks'],
+    bestFit:['Analysis / research','Planning / strategy','Debugging / troubleshooting'],
+    worstFit:['Real-time or latency-sensitive tasks','High-throughput pipelines','Simple mechanical execution tasks'],
+    guardrails:['Add time-box constraints to prevent analysis paralysis','Require explicit "confidence threshold" before further qualification','Gate behind pre-defined scope boundaries to prevent scope creep']
+  },
+  {
+    id:'collaborator', rank:3, name:'The Collaborator', tagline:'Partnership-first; highest trust and communication scores',
+    cardClass:'r3',
+    scores:{ACC:4.2,SPD:3.0,CMP:4.4,CON:4.0,IFW:3.8,AUT:2.0,ERR:3.8,CMQ:5.0,SCL:3.0,UST:5.0},
+    overall:3.82, confidence:'HIGH',
+    core:'Treats every task as a partnership. Seeks alignment before acting, confirms assumptions, and surfaces ambiguity early. Produces outputs optimized for user intent rather than prompt interpretation. Maximum trust and communication quality at the cost of autonomy and throughput.',
+    strengths:['Highest user trust score (5.0) in the entire set','Catches misalignments before they propagate into expensive rework','Produces the communication quality users actually want on high-stakes work'],
+    failures:['Blocks on user input; incompatible with fully automated pipelines','Low autonomy (2.0) limits use in any context without human-in-the-loop','Over-asks on well-defined tasks, slowing even simple work unnecessarily'],
+    bestFit:['Customer-facing workflows','Planning and strategy','Creative and synthesis tasks','High-stakes deliverables requiring user alignment'],
+    worstFit:['Fully automated pipelines','High-throughput batch processing','Any task where blocking is structurally unacceptable'],
+    guardrails:['Cap clarifying questions to maximum 2 before proceeding with stated assumptions','Define "proceed autonomously" thresholds for low-stakes or time-bound decisions','Ensure async-safe operation; cannot be the bottleneck in a synchronous pipeline']
+  },
+  {
+    id:'specialist', rank:4, name:'The Specialist', tagline:'Deep domain expert; high consistency within scope',
+    cardClass:'rm',
+    scores:{ACC:4.0,SPD:3.4,CMP:4.0,CON:4.6,IFW:3.6,AUT:2.8,ERR:3.6,CMQ:3.4,SCL:3.6,UST:3.6},
+    overall:3.66, confidence:'HIGH',
+    core:'Operates as a deep domain expert within a defined scope. Delivers the highest consistency score (4.6) in the study — highly reliable when on-domain. Performance drops sharply outside domain boundaries. Not a graceful degrader.',
+    strengths:['Highest consistency score (4.6) of any personality','Excellent debugging and domain coding performance','High accuracy within defined scope; trustworthy for compliance-sensitive work'],
+    failures:['Sharp performance cliff outside domain — no graceful degradation','Weak on planning and creative tasks (cross-domain reasoning)','Low autonomy on ambiguous tasks; may refuse rather than approximate'],
+    bestFit:['Implementation / coding (in-domain)','Debugging / troubleshooting (in-domain)','Analysis in well-defined subject matter areas'],
+    worstFit:['Cross-domain synthesis','Strategic planning requiring broad perspective','Any task requiring novelty or creative output'],
+    guardrails:['Hard boundary enforcement for out-of-domain requests — route rather than attempt','Mandatory handoff protocol when task scope drifts from defined domain','Regular calibration updates as domain knowledge evolves']
+  },
+  {
+    id:'synthesizer', rank:5, name:'The Synthesizer', tagline:'Cross-domain connector; highest creative performance',
+    cardClass:'rm',
+    scores:{ACC:4.0,SPD:3.0,CMP:4.6,CON:3.0,IFW:3.0,AUT:4.2,ERR:3.2,CMQ:4.6,SCL:3.2,UST:3.6},
+    overall:3.64, confidence:'MEDIUM',
+    core:'Finds non-obvious patterns across disparate inputs and generates emergent outputs. Highest completeness (4.6) for complex multi-source tasks. The best creative and strategic performer in the set, but consistency (3.0) is the lowest of any recommended personality — outputs vary significantly across runs.',
+    strengths:['Best creative synthesis performance in the study','Strong cross-domain strategic planning; sees connections others miss','High completeness and communication quality on complex tasks'],
+    failures:['Lowest consistency score (3.0) of any recommended personality','Can generate plausible-sounding but factually incorrect outputs on precise claims','Instruction-following weak (3.0) — frequently extends beyond stated scope'],
+    bestFit:['Creative / synthesis tasks','Planning and strategy (multi-stakeholder)','Complex analysis requiring cross-domain pattern recognition'],
+    worstFit:['Debugging / troubleshooting (needs precision)','Compliance-critical or factual-accuracy-critical tasks','Any context where consistency across runs is required'],
+    guardrails:['Require source citation and attribution on all synthesized factual claims','Add a plausibility-check step before synthesized outputs are accepted','Limit synthesis depth on high-stakes factual content; route to Analyst for verification']
+  },
+  {
+    id:'autonomist', rank:6, name:'The Autonomist', tagline:'High initiative; fills gaps and proceeds under ambiguity',
+    cardClass:'rm',
+    scores:{ACC:3.4,SPD:4.6,CMP:3.4,CON:3.0,IFW:3.0,AUT:5.0,ERR:3.0,CMQ:3.2,SCL:4.0,UST:3.0},
+    overall:3.56, confidence:'MEDIUM',
+    core:'Treats ambiguity as a green light. Fills gaps, makes assumptions, and proceeds at speed. Maximum autonomy score (5.0); second-highest speed. Useful in low-stakes exploratory contexts but creates compounding error risk when deployed on tasks where assumptions are expensive to correct. Evidence for this archetype is mixed — performance variance is high.',
+    strengths:['Highest autonomy (5.0); never blocks pipelines','Fast to first output; excellent for rapid prototyping and exploration','Performs well on creative and planning tasks where assumption-making is acceptable'],
+    failures:['Compounding errors on ambiguous inputs — assumptions stack without correction','Consistency (3.0) reflects run-to-run unpredictability','User trust (3.0) is among the lowest — unpredictability erodes confidence'],
+    bestFit:['Exploratory and creative generation','Rapid prototyping with low rollback cost','Low-stakes pipelines with downstream review steps'],
+    worstFit:['Compliance-critical tasks','Any task where wrong assumptions are expensive or irreversible','High-stakes planning without human-in-the-loop'],
+    guardrails:['Mandatory human checkpoint after every 3 autonomous actions','Define explicit rollback points before irreversible operations','Require risk acknowledgment and explicit assumption logging on novel decision paths']
+  },
+  {
+    id:'narrator', rank:7, name:'The Narrator', tagline:'Maximal documentation; complete but slow',
+    cardClass:'rm',
+    scores:{ACC:4.0,SPD:1.2,CMP:5.0,CON:3.8,IFW:3.8,AUT:2.0,ERR:3.2,CMQ:5.0,SCL:2.0,UST:4.0},
+    overall:3.40, confidence:'HIGH',
+    core:'Documents everything. Provides full rationale, step-by-step explanations, and complete audit trails. Highest completeness and communication quality scores (both 5.0). Lowest speed score in the study (1.2) — a structural blocker in any performance-sensitive context.',
+    strengths:['Tied for highest CMP and CMQ scores (5.0 each)','Creates thorough handoff artifacts and knowledge transfer documents','Good user trust when the person expects a detailed deliverable'],
+    failures:['Speed of 1.2 is the worst in the study by a wide margin — unacceptable for pipelines','Scalability (2.0) makes repeated use prohibitively expensive','Output volume often overwhelms rather than aids; completeness ≠ clarity'],
+    bestFit:['Documentation and knowledge capture tasks','High-stakes human handoffs requiring full audit trails','Training material generation'],
+    worstFit:['Any performance-sensitive context','Automated pipelines','High-throughput or repeated task execution'],
+    guardrails:['Hard token cap on explanatory content (40% of output maximum)','"Summary mode" trigger for pipeline environments','Speed SLA with automatic output truncation on breach']
+  },
+  {
+    id:'critic', rank:8, name:'The Critic', tagline:'Adversarial reviewer; strong on error detection, hostile elsewhere',
+    cardClass:'dnm',
+    scores:{ACC:4.2,SPD:2.2,CMP:4.2,CON:3.0,IFW:2.8,AUT:3.6,ERR:4.2,CMQ:3.6,SCL:2.8,UST:3.0},
+    overall:3.36, confidence:'HIGH',
+    core:'Challenges inputs, identifies flaws, and stress-tests assumptions. Strong accuracy and error recovery scores make it genuinely valuable in quality-gate roles. Actively harmful in creative tasks — produces user hostility as a side effect and scores 2.7 on creative scenarios.',
+    strengths:['Strong accuracy (4.2) and error recovery (4.2)','Excellent for debugging and adversarial quality review','Surfaces issues others miss; functions as a useful second pass'],
+    failures:['Instruction-following weak (2.8) — often goes off-brief to criticize','Actively harmful to creative workflows; suppresses novel output','User trust (3.0) is low — communication style creates friction'],
+    bestFit:['Debugging / troubleshooting','Quality review and adversarial testing','Analysis (as a second-pass reviewer, not primary agent)'],
+    worstFit:['Creative / synthesis tasks','Collaborative brainstorming','Any context requiring rapport or user comfort'],
+    guardrails:['Require constructive alternative after every critique — no pure blocking','Disable entirely in creative brainstorming phases','Define mandatory escalation path rather than allowing the Critic to terminate tasks unilaterally']
+  },
+  {
+    id:'executor', rank:9, name:'The Executor', tagline:'Literal instruction-follower; brittle under ambiguity',
+    cardClass:'dnm',
+    scores:{ACC:3.0,SPD:4.4,CMP:2.4,CON:4.4,IFW:4.8,AUT:1.4,ERR:2.0,CMQ:2.8,SCL:4.0,UST:2.4},
+    overall:3.16, confidence:'HIGH',
+    core:'Treats prompts as specifications. Executes exactly what is asked — no more, no less. Highest instruction-following score (4.8) and strong consistency (4.4), but accuracy suffers on any task requiring judgment. Error recovery (2.0) means failures propagate rather than self-correct.',
+    strengths:['Highest instruction-following (4.8) — does exactly what is stated','High consistency (4.4); highly predictable on repeated identical tasks','Fast with low overhead on well-defined mechanical tasks'],
+    failures:['Accuracy drops sharply (3.0) on anything requiring judgment or ambiguity resolution','Error recovery (2.0) — failures propagate without self-correction','Lowest autonomy (1.4) means it blocks or produces garbage on underspecified inputs'],
+    bestFit:['Mechanical execution with complete specifications','Format conversion with zero ambiguity','Highly repetitive tasks with no decision-making required'],
+    worstFit:['Any task with ambiguity or incomplete specification','Creative tasks, analysis, planning','Any context where error recovery matters'],
+    guardrails:['No autonomous operation on ambiguous inputs — hard requirement','Mandatory confirmation step on destructive or irreversible actions','Structured clarification protocol required before multi-step execution']
+  },
+  {
+    id:'minimalist', rank:10, name:'The Minimalist', tagline:'Output-lean; systematically incomplete on complex tasks',
+    cardClass:'dnm',
+    scores:{ACC:3.2,SPD:4.4,CMP:2.0,CON:3.8,IFW:3.8,AUT:2.8,ERR:2.2,CMQ:2.0,SCL:4.8,UST:2.4},
+    overall:3.14, confidence:'HIGH',
+    core:'Produces the minimum viable answer. Anti-bloat orientation with high throughput (second-best scalability at 4.8). The completeness score (2.0) reveals the core problem: it systematically under-delivers by design on anything beyond trivially scoped tasks.',
+    strengths:['Best scalability (4.8) — excellent for high-volume simple pipelines','Fast and low-overhead','Appropriate for simple well-scoped tasks where brevity is a feature'],
+    failures:['Lowest completeness (2.0) in the study — systematic under-delivery','Lowest communication quality (2.0) — outputs often require follow-up','User trust (2.4) reflects awareness that important details are being omitted'],
+    bestFit:['Simple well-scoped single-step coding tasks','High-throughput simple format conversion','Contexts where output brevity is the explicit requirement'],
+    worstFit:['Complex analysis or research','Creative or synthesis tasks','Any task requiring thoroughness, nuance, or communication quality'],
+    guardrails:['Completeness floor: minimum output criteria defined per task type','Auto-escalation when task complexity exceeds defined threshold','Structured output templates to prevent silent under-delivery']
+  }
+];
+
+const scenarioData = [
+  {name:'Implementation / Coding',rankings:[{name:'Specialist',score:4.3},{name:'Pragmatist',score:4.0},{name:'Analyst',score:3.8},{name:'Collaborator',score:3.7},{name:'Executor',score:3.6},{name:'Autonomist',score:3.4},{name:'Critic',score:3.3},{name:'Minimalist',score:3.2},{name:'Synthesizer',score:3.2},{name:'Narrator',score:3.0}]},
+  {name:'Analysis / Research',rankings:[{name:'Analyst',score:4.2},{name:'Pragmatist',score:4.0},{name:'Specialist',score:3.9},{name:'Collaborator',score:3.8},{name:'Critic',score:3.7},{name:'Synthesizer',score:3.7},{name:'Autonomist',score:3.2},{name:'Narrator',score:3.0},{name:'Minimalist',score:2.8},{name:'Executor',score:2.8}]},
+  {name:'Planning / Strategy',rankings:[{name:'Pragmatist',score:4.0},{name:'Collaborator',score:4.0},{name:'Synthesizer',score:3.9},{name:'Analyst',score:3.8},{name:'Autonomist',score:3.6},{name:'Critic',score:3.3},{name:'Narrator',score:3.2},{name:'Specialist',score:3.1},{name:'Executor',score:2.8},{name:'Minimalist',score:2.8}]},
+  {name:'Debugging / Troubleshooting',rankings:[{name:'Specialist',score:4.5},{name:'Analyst',score:4.2},{name:'Critic',score:4.0},{name:'Pragmatist',score:4.0},{name:'Collaborator',score:3.8},{name:'Narrator',score:3.3},{name:'Autonomist',score:3.3},{name:'Synthesizer',score:3.2},{name:'Minimalist',score:3.2},{name:'Executor',score:3.0}]},
+  {name:'Creative / Synthesis',rankings:[{name:'Synthesizer',score:4.1},{name:'Pragmatist',score:3.9},{name:'Collaborator',score:3.8},{name:'Analyst',score:3.6},{name:'Autonomist',score:3.5},{name:'Narrator',score:3.4},{name:'Specialist',score:2.8},{name:'Critic',score:2.7},{name:'Minimalist',score:2.4},{name:'Executor',score:2.4}]}
+];
+
+const ownershipData = [
+  {scenario:'Implementation / Coding',desc:'Well-specified build tasks, component authoring, API development',primary:['Specialist','Pragmatist'],secondary:['Analyst (review)','Critic (quality gate)'],note:'Route to Specialist for in-domain. Pragmatist if domain is unclear or cross-cutting. Never Executor on ambiguous specs.'},
+  {scenario:'Analysis / Research',desc:'Competitive intelligence, data synthesis, literature review, impact assessment',primary:['Analyst'],secondary:['Pragmatist (fallback)','Critic (second-pass review)'],note:'Analyst is the clear primary. Time-box aggressively. Escalate to Pragmatist if analysis latency exceeds SLA.'},
+  {scenario:'Planning / Strategy',desc:'Roadmaps, GTM strategy, project planning, stakeholder alignment',primary:['Pragmatist','Collaborator'],secondary:['Synthesizer','Analyst (data backing)'],note:'Collaborator owns user-facing planning sessions. Pragmatist owns automated planning tasks. Synthesizer as creative input layer.'},
+  {scenario:'Debugging / Troubleshooting',desc:'Root cause analysis, error diagnosis, system behavior investigation',primary:['Specialist','Analyst'],secondary:['Critic (adversarial testing)','Pragmatist (fallback)'],note:'Specialist for in-domain bugs. Analyst for systemic / cross-domain root cause. Critic useful as a structured second-pass challenger.'},
+  {scenario:'Creative / Synthesis',desc:'Positioning work, creative briefs, cross-domain concept generation, narrative',primary:['Synthesizer','Pragmatist'],secondary:['Collaborator (alignment layer)'],note:'Synthesizer owns creative output generation. Add Collaborator as front-end alignment layer on high-stakes creative briefs. Never route to Critic, Executor, or Minimalist.'}
+];
+
+const dnmData = [
+  {name:'Pure Executor',pattern:'Literal instruction-follower with no judgment or recovery',reasons:['Accuracy collapses on any underspecified task (3.0)','Error recovery of 2.0 means failures propagate silently','Creates technical debt when used as a general agent','Low autonomy means it blocks or produces garbage on real-world input variance'],exception:'Acceptable in a narrow mechanical execution role with 100% complete input specifications and downstream review. Not a general agent.'},
+  {name:'Pure Minimalist',pattern:'Output-lean agent that systematically under-delivers',reasons:['Completeness of 2.0 is a structural output failure, not a tuning issue','Communication quality of 2.0 consistently requires follow-up, negating throughput advantage','User trust of 2.4 reveals that downstream consumers do not rely on its outputs','Scalability advantage (4.8) is negated when shallow outputs require rework'],exception:'Acceptable as a "triage pass" agent in a pipeline with a mandatory completeness-check second step. Never as a final output agent.'},
+  {name:'Unconstrained Autonomist',pattern:'Assumption-stacking agent with no checkpoint protocol',reasons:['Compounding errors on ambiguous inputs without guardrails','Consistency of 3.0 means identical inputs can produce materially different outputs','User trust of 3.0 reflects unpredictability that erodes deployment confidence','High-speed error propagation is a systemic risk in automated pipelines'],exception:'Acceptable in an exploration-only role with mandatory human review, hard rollback points, and no downstream system writes. The constrained variant with explicit checkpoints can be modeled — the unconstrained variant cannot.'},
+  {name:'Dominant Critic',pattern:'Adversarial challenger used as a primary agent',reasons:['Instruction-following of 2.8 means it regularly goes off-brief to critique','Scores 2.7 on creative scenarios — active harm, not neutral underperformance','User trust of 3.0 creates ongoing friction in any user-facing deployment','Without a constructive output requirement, it terminates work rather than advancing it'],exception:'Acceptable in a bounded quality-gate role (second-pass only, never primary) with a mandatory alternative-generation requirement after every critique. This is the Critic as tool, not as agent.'}
+];
+
+function scoreColor(s) {
+  if (s >= 4.5) return { bg: 'var(--s5-bg)', c: 'var(--s5-c)' };
+  if (s >= 4.0) return { bg: 'var(--s4-bg)', c: 'var(--s4-c)' };
+  if (s >= 3.5) return { bg: 'var(--s3-bg)', c: 'var(--s3-c)' };
+  if (s >= 3.0) return { bg: 'rgba(245,200,66,0.07)', c: '#c9a83a' };
+  if (s >= 2.5) return { bg: 'var(--s2-bg)', c: 'var(--s2-c)' };
+  if (s >= 2.0) return { bg: 'rgba(248,113,113,0.1)', c: 'var(--s1-c)' };
+  return { bg: 'rgba(232,85,90,0.2)', c: 'var(--red)' };
+}
+
+function barColor(s) {
+  if (s >= 4.5) return '#3ecf8e';
+  if (s >= 4.0) return '#6da3e8';
+  if (s >= 3.5) return '#f5c842';
+  if (s >= 3.0) return '#d4a849';
+  if (s >= 2.5) return '#f5884d';
+  return '#e8555a';
+}
+
+const hmbody = document.getElementById('hm-body');
+personalities.forEach(function (p) {
+  let row = '<tr><td class="pn"><span class="rk">' + p.rank + '</span>' + p.name.replace('The ','') + '</td>';
+  dims.forEach(function (d) {
+    const s = p.scores[d];
+    const col = scoreColor(s);
+    row += '<td><span class="sc" style="background:' + col.bg + ';color:' + col.c + '">' + s.toFixed(1) + '</span></td>';
+  });
+  const oCol = scoreColor(p.overall);
+  row += '<td class="ov" style="color:' + oCol.c + '">' + p.overall.toFixed(2) + '</td></tr>';
+  hmbody.innerHTML += row;
+});
+
+const scenGrid = document.getElementById('scen-grid');
+scenarioData.forEach(function (sc) {
+  let html = '<div class="scen-block"><div class="scen-name">' + sc.name + '</div>';
+  sc.rankings.forEach(function (r, i) {
+    const col = scoreColor(r.score);
+    html += '<div class="scen-row"><span class="scen-pos">' + (i + 1) + '</span><span class="scen-nm">' + r.name + '</span><span class="scen-sc" style="color:' + col.c + '">' + r.score.toFixed(1) + '</span></div>';
+  });
+  html += '</div>';
+  scenGrid.innerHTML += html;
+});
+
+const rankBody = document.getElementById('rank-body');
+personalities.forEach(function (p) {
+  const pct = (p.overall / 5) * 100;
+  const bCol = barColor(p.overall);
+  const topClass = p.rank <= 3 ? 'top' : '';
+  const cClass = p.confidence === 'HIGH' ? 'c-hi' : p.confidence === 'MEDIUM' ? 'c-md' : 'c-lo';
+  let row = '<tr><td><div class="rk-num ' + topClass + '">' + p.rank + '</div></td><td><div class="pty-name">' + p.name + '</div><div class="pty-tag">' + p.tagline + '</div></td><td><div class="bar-row"><div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:' + bCol + '"></div></div><span class="bar-sc" style="color:' + bCol + '">' + p.overall.toFixed(2) + '</span></div></td><td><div class="tag-row">' + p.bestFit.map(function (t) { return '<span class="tag b">' + t + '</span>'; }).join('') + '</div></td><td><div class="tag-row">' + p.worstFit.map(function (t) { return '<span class="tag w">' + t + '</span>'; }).join('') + '</div></td><td><span class="conf-badge ' + cClass + '">' + p.confidence + '</span></td></tr>';
+  rankBody.innerHTML += row;
+});
+
+const profGrid = document.getElementById('prof-grid');
+personalities.forEach(function (p) {
+  const dimHtml = dims.map(function (d) {
+    const s = p.scores[d];
+    const pct = (s / 5) * 100;
+    const bCol = barColor(s);
+    return '<div class="db-row"><span class="db-lbl">' + d + '</span><div class="db-track"><div class="db-fill" style="width:' + pct + '%;background:' + bCol + '"></div></div><span class="db-val">' + s.toFixed(1) + '</span></div>';
+  }).join('');
+  const bFitHtml = p.bestFit.map(function (t) { return '<span class="tag b">' + t + '</span>'; }).join('');
+  const wFitHtml = p.worstFit.map(function (t) { return '<span class="tag w">' + t + '</span>'; }).join('');
+  const cClass = p.confidence === 'HIGH' ? 'c-hi' : p.confidence === 'MEDIUM' ? 'c-md' : 'c-lo';
+  const card = '<div class="prof-card ' + p.cardClass + '"><div class="prof-rk">' + p.rank + '</div><div class="prof-name">' + p.name + '</div><div class="prof-tagline">' + p.tagline + '</div><span class="conf-badge ' + cClass + '" style="margin-bottom:12px;display:inline-block">' + p.confidence + ' CONFIDENCE</span><div class="pl">Core Behavior</div><div class="pt">' + p.core + '</div><div class="pl">Strengths</div><ul class="plist str">' + p.strengths.map(function (s) { return '<li>' + s + '</li>'; }).join('') + '</ul><div class="pl">Failure Modes</div><ul class="plist fail">' + p.failures.map(function (f) { return '<li>' + f + '</li>'; }).join('') + '</ul><div class="pl">Best-Fit Tasks</div><div class="tag-row">' + bFitHtml + '</div><div class="pl">Worst-Fit Tasks</div><div class="tag-row">' + wFitHtml + '</div><div class="pl">Dimension Scores</div><div class="dim-bars">' + dimHtml + '</div><div class="pl">Recommended Guardrails</div><ul class="plist grds">' + p.guardrails.map(function (g) { return '<li>' + g + '</li>'; }).join('') + '</ul></div>';
+  profGrid.innerHTML += card;
+});
+
+const ownBody = document.getElementById('own-body');
+ownershipData.forEach(function (o) {
+  ownBody.innerHTML += '<tr><td><div class="scen-title">' + o.scenario + '</div><div class="scen-desc">' + o.desc + '</div></td><td><div class="chip-row">' + o.primary.map(function (p) { return '<span class="chip p">' + p + '</span>'; }).join('') + '</div></td><td><div class="chip-row">' + o.secondary.map(function (s) { return '<span class="chip s">' + s + '</span>'; }).join('') + '</div></td><td><div class="esc-note">' + o.note + '</div></td></tr>';
+});
+
+const dnmGrid = document.getElementById('dnm-grid');
+dnmData.forEach(function (d) {
+  dnmGrid.innerHTML += '<div class="dnm-card"><div class="dnm-name">' + d.name + '</div><div class="dnm-pattern">' + d.pattern + '</div><div class="dnm-rl">Disqualifying Evidence</div><ul class="dnm-list">' + d.reasons.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul><div class="dnm-exc"><strong>Limited Exception:</strong> ' + d.exception + '</div></div>';
+});
+
+const winners = document.getElementById('winners');
+personalities.slice(0,3).forEach(function (p) {
+  const bCol = barColor(p.overall);
+  winners.innerHTML += '<div class="w-badge"><span class="rk">#' + p.rank + '</span><span class="nm">' + p.name + '</span><span class="sc" style="color:' + bCol + '">' + p.overall.toFixed(2) + '</span></div>';
+});
+</script>
+</body>
+</html>
