@@ -9,6 +9,9 @@ Named agent profiles, role definitions, and operational persona specs. These are
 | File | Type | Summary |
 |------|------|---------|
 | [veritas-canvas.md](veritas-canvas.md) | Named persona | High-stakes analyst. Converts complex inputs into decision-grade, security-conscious, fact-traceable insight. |
+| [chisel.md](chisel.md) | Named persona (prompt) | Senior frontend engineer. Audits, fixes, and verifies existing HTML, CSS, and JavaScript. Single source for its Claude and Codex versions. |
+| [hammer-agent-personality.json](hammer-agent-personality.json) | Named persona (JSON) | Codebase-scale frontend improvement. Finds a pattern across many files and fixes every instance in one repeatable pass. |
+| [forge-agent-personality.json](forge-agent-personality.json) | Named persona (JSON) | Senior staff engineer for code generation. Executable, typed, error-handled output, not stubs. |
 | [executor-agent.md](executor-agent.md) | Role definition | Execution-first implementation agent. Patches Dave's local workspace with minimal interruption. |
 | [schema-notes.md](schema-notes.md) | Contract notes | Lightweight schema expectations for personality JSON files and companion prompt docs. |
 | [female-programmer-agents.json](female-programmer-agents.json) | Persona collection (JSON) | Rich Nova / Celeste / Aurora agent schema with model mapping, visual system, and constraint sets. |

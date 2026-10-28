@@ -11,6 +11,10 @@ Use companion markdown files when the same persona also needs:
 - an execution-mode prompt
 - an image-generation or visual-direction prompt
 
+## Markdown-Only Agents
+
+An agent that runs inside a coding tool such as Claude Code or Codex is kept as one Markdown prompt instead of JSON, for example `chisel.md`. That file is the single source of truth: write it as plain instructions with no placeholders or fill-in fields, and build each tool-specific version from it rather than editing those versions separately.
+
 ## Recommended JSON Shapes
 
 There are currently two acceptable patterns in this folder:

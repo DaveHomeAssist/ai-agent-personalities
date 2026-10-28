@@ -24,8 +24,7 @@ Shared personality source of truth:
 
 If I reference an agent/personality, load from there:
 - Hammer: `hammer-agent-personality.json`
-- Chisel: `chisel-agent-personality.json`
-- Chisel output model: `chisel-output-model.json`
+- Chisel: `chisel.md`
 - Forge: `forge-agent-personality.json`
 - Nova/Celeste/Aurora:
   - `female-programmer-agents.json`
