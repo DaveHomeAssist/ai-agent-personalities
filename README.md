@@ -10,6 +10,7 @@ Named agent profiles, role definitions, and operational persona specs. These are
 |------|------|---------|
 | [veritas-canvas.md](veritas-canvas.md) | Named persona | High-stakes analyst. Converts complex inputs into decision-grade, security-conscious, fact-traceable insight. |
 | [chisel.md](chisel.md) | Named persona (prompt) | Senior frontend engineer. Audits, fixes, and verifies existing HTML, CSS, and JavaScript. Single source for its Claude and Codex versions. |
+| [tools/build-agents.mjs](tools/build-agents.mjs) | Build script | Generates the Claude Code and Codex versions of Markdown-only agents into `dist/` and installs them. |
 | [hammer-agent-personality.json](hammer-agent-personality.json) | Named persona (JSON) | Codebase-scale frontend improvement. Finds a pattern across many files and fixes every instance in one repeatable pass. |
 | [forge-agent-personality.json](forge-agent-personality.json) | Named persona (JSON) | Senior staff engineer for code generation. Executable, typed, error-handled output, not stubs. |
 | [executor-agent.md](executor-agent.md) | Role definition | Execution-first implementation agent. Patches Dave's local workspace with minimal interruption. |
@@ -26,6 +27,18 @@ Named agent profiles, role definitions, and operational persona specs. These are
 | [critical-patch-deployment-system.json](critical-patch-deployment-system.json) | Role definition (JSON) | System-level specialist for critical patch deployment. Prioritizes stability and rollback safety. |
 
 ---
+
+## Claude and Codex versions
+
+Markdown-only agents such as [chisel.md](chisel.md) are the single source. [tools/build-agents.mjs](tools/build-agents.mjs) turns each one into a Claude Code agent in `dist/claude/agents/` and a Codex agent in `dist/codex/agents/`. Never edit the files in `dist/`; edit the source and rebuild.
+
+```bash
+node tools/build-agents.mjs            # rebuild dist/
+node tools/build-agents.mjs --install  # rebuild, then install into ~/.claude/agents and ~/.codex/agents
+node tools/build-agents.mjs --check    # fail if dist/ or an installed copy is out of date
+```
+
+`--install` backs up any installed copy that differs before replacing it. Once installed, ask for an agent by name in either tool, for example "have Chisel audit this page".
 
 ## What goes here
 
